@@ -29,7 +29,14 @@ export default function LoginPage() {
       return;
     }
 
-    const role = data.user?.user_metadata?.role;
+    let role = data.user?.user_metadata?.role;
+    
+    if (!role && data.user) {
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).single();
+      if (profile) {
+        role = profile.role;
+      }
+    }
     
     if (role === 'admin') {
       router.push('/admin');
