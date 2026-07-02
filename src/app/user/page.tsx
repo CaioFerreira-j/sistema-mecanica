@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Settings, Search, Plus, Car, Clock, X, CheckCircle2, Edit2, LogOut, Check, Info, Trash2, MessageCircle, DollarSign } from 'lucide-react';
+import { Settings, Search, Plus, Car, Clock, X, CheckCircle2, Edit2, LogOut, Check, Info, Trash2, MessageCircle, DollarSign, Wrench } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
@@ -20,6 +20,7 @@ export default function UserPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [activeTab, setActiveTab] = useState<'ativas' | 'historico'>('ativas');
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
   
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -76,6 +77,7 @@ export default function UserPage() {
         setVehicles(osData);
       }
       setIsLoading(false);
+      setIsAuthChecking(false);
     }
     loadData();
   }, [supabase, router]);
@@ -245,6 +247,14 @@ export default function UserPage() {
     }
     setIsEditingName(false);
   };
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <Wrench className="w-12 h-12 text-blue-500 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-24 relative">

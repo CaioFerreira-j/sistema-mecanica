@@ -25,11 +25,24 @@ export default function AdminPage() {
   const [isSettingsMenuOpen, setIsSettingsMenuOpen] = useState(false);
   const [totalCarsInRepair, setTotalCarsInRepair] = useState(0);
   const [totalCarsFinalized, setTotalCarsFinalized] = useState(0);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
 
 
   useEffect(() => {
     async function fetchData() {
       setIsLoading(true);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        router.push('/');
+        return;
+      }
+
+      const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
+      if (!profile || profile.role !== 'admin') {
+         router.push('/user');
+         return;
+      }
       
       const [profilesRes, ordersRes] = await Promise.all([
         supabase.from('profiles').select('*').eq('role', 'user'),
@@ -56,6 +69,7 @@ export default function AdminPage() {
       setTotalCarsInRepair(globalInRepair);
       setTotalCarsFinalized(globalFinalized);
       setIsLoading(false);
+      setIsAuthChecking(false);
     }
     fetchData();
   }, [supabase]);
@@ -85,6 +99,14 @@ export default function AdminPage() {
     router.push('/');
   };
 
+
+  if (isAuthChecking) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+        <Wrench className="w-12 h-12 text-indigo-500 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-24 relative">
