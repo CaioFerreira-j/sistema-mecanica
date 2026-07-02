@@ -163,7 +163,7 @@ export default function UserPage() {
     setHasUnsavedChanges(true);
   };
 
-  const totalGasto = formData.services.reduce((acc, curr) => acc + curr.price, 0);
+  const totalGasto = formData.services.reduce((acc: number, curr: ServiceItem) => acc + Number(curr.price || 0), 0);
 
   const handleSave = async () => {
     if (!isConfirmingSave) {
@@ -397,8 +397,8 @@ export default function UserPage() {
         </div>
         
         <div className="flex flex-col gap-4">
-          {filteredVehicles.map((vehicle) => {
-            const vehicleTotal = vehicle.services?.reduce((acc, curr) => acc + curr.price, 0) || 0;
+          {filteredVehicles.map((vehicle: any) => {
+            const vehicleTotal = vehicle.services?.reduce((acc: number, curr: any) => acc + Number(curr.price || 0), 0) || 0;
             return (
               <div 
                 key={vehicle.id} 
