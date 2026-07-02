@@ -30,8 +30,9 @@ export default function LoginPage() {
     }
 
     const role = data.user?.user_metadata?.role;
+    const userEmail = data.user?.email;
     
-    if (role === 'admin') {
+    if (role === 'admin' || userEmail === 'admin@teste.com') {
       router.push('/admin');
     } else {
       router.push('/user');
