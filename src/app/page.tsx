@@ -23,7 +23,8 @@ export default function LoginPage() {
     });
 
     if (authError) {
-      setError('Credenciais inválidas.');
+      console.error(authError);
+      setError(authError.message || 'Credenciais inválidas.');
       setLoading(false);
       return;
     }
